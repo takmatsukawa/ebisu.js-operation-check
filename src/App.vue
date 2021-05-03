@@ -6,6 +6,16 @@
         >https://fasiha.github.io/ebisu.js/</a
       >
     </p>
+    <pre><code>import {defaultModel, predictRecall, updateRecall} from 'ebisu-js';
+let model = defaultModel({{halfLife}});
+// After 1t
+console.log(predictRecall(model, 1, true));
+// ...
+// After 11t, 1 success of 1 trial
+model = updateRecall(model, 1, 1 11);
+// After 1t since last `updateRecall`
+console.log(predictRecall(model, 1, true));
+</code></pre>
     <p>
       <label for="halfLife"
         >Your guess as to the half-life of any given fact:</label
@@ -16,7 +26,6 @@
       <thead>
         <tr>
           <th>Elapsed time</th>
-          <th>Total elapsed time</th>
           <th>Model</th>
           <th>Successes of trials correct</th>
           <th>Total number of trials</th>
@@ -24,31 +33,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(elapsed, i) in elapseds" :key="i">
-          <td>{{ elapsed.elapsed }}</td>
-          <td>{{ totalElapseds[i] }}</td>
-          <td>{{ models[i] }}</td>
-          <td>{{ elapsed.successes }}</td>
-          <td>{{ elapsed.total }}</td>
-          <td>{{ predictedRecalls[i] }}</td>
+        <tr v-for="(log, i) in logs" :key="i">
+          <td>{{ log[0] }}</td>
+          <td>{{ log[1] }}</td>
+          <td :style="{ backgroundColor: log[2] > 0 ? '#ff572247' : '' }">{{ log[2] }}</td>
+          <td :style="{ backgroundColor: log[3] > 0 ? '#ff572247' : '' }">{{ log[3] }}</td>
+          <td>{{ log[4] }}</td>
         </tr>
       </tbody>
     </table>
-    <hr />
-    <form @submit.prevent="forwardTime">
-      <h4>Advance clocks</h4>
-
-      <label for="elapsed">Elapsed time</label>
-      <input id="elapsed" type="number" v-model.number="newElapsedTime" />
-
-      <label for="successes">Successes of trials correct</label>
-      <input id="successes" type="number" v-model.number="successesCount" />
-
-      <label for="total">Total number of trials</label>
-      <input id="total" type="number" v-model.number="totalCount" />
-
-      <button class="button button-outline" type="submit">Elapse</button>
-    </form>
   </main>
 </template>
 
@@ -56,75 +49,47 @@
 import { computed, defineComponent, ref } from "vue";
 import { defaultModel, predictRecall, updateRecall, Model } from "ebisu-js";
 
-type Elapse = {
-  elapsed: number;
-  successes: number;
-  total: number;
-};
-
 export default defineComponent({
   name: "App",
   setup: () => {
-    const halfLife = ref(24);
-    const elapseds = ref<Elapse[]>([{ elapsed: 0, successes: 0, total: 0 }]);
+    const halfLife = ref(10);
+    const logs = computed(() => {
+      let logs: [number, Model, number, number, number][] = [];
+      let model = defaultModel(halfLife.value);
 
-    const newElapsedTime = ref(1);
-    const successesCount = ref(0);
-    const totalCount = ref(0);
+      let totalEpalsed = 0;
+      for (let i = 0; i < 48; i++, totalEpalsed++) {
+        let successes = 0;
+        let total = 0;
 
-    const forwardTime = () => {
-      elapseds.value.push({
-        elapsed: newElapsedTime.value,
-        successes: successesCount.value,
-        total: totalCount.value,
-      });
-    };
+        if (i == 11) {
+          successes = 1;
+          total = 1;
+          model = updateRecall(model, successes, total, totalEpalsed);
+          totalEpalsed = 0;
+        }
 
-    const models = computed(() =>
-      elapseds.value.reduce(
-        (prev: Model[], curr, i) => [
-          ...prev,
-          i == 0
-            ? defaultModel(halfLife.value)
-            : curr.total == 0
-            ? prev[prev.length - 1]
-            : updateRecall(
-                prev[prev.length - 1],
-                curr.successes,
-                curr.total,
-                curr.elapsed
-              ),
-        ],
-        []
-      )
-    );
+        if (i == 21) {
+          successes = 0;
+          total = 1;
+          model = updateRecall(model, successes, total, totalEpalsed);
+          totalEpalsed = 0;
+        }
 
-    const totalElapseds = computed(() =>
-      elapseds.value.reduce(
-        (total: number[], curr) => [
-          ...total,
-          (total.length ? total[total.length - 1] : 0) + curr.elapsed,
-        ],
-        []
-      )
-    );
-
-    const predictedRecalls = computed(() =>
-      elapseds.value.map((elapsed, i) =>
-        predictRecall(models.value[i], elapsed.elapsed, true)
-      )
-    );
+        logs.push([
+          i,
+          model,
+          successes,
+          total,
+          predictRecall(model, totalEpalsed, true),
+        ]);
+      }
+      return logs;
+    });
 
     return {
       halfLife,
-      forwardTime,
-      elapseds,
-      models,
-      totalElapseds,
-      predictedRecalls,
-      newElapsedTime,
-      successesCount,
-      totalCount,
+      logs,
     };
   },
 });
