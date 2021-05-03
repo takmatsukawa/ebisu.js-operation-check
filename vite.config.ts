@@ -3,6 +3,6 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/ebisu.js-operation-check/',
+  base: "/ebisu.js-operation-check/",
   plugins: [vue()],
 });

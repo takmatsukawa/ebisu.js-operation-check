@@ -86,6 +86,8 @@ export default defineComponent({
           ...prev,
           i == 0
             ? defaultModel(halfLife.value)
+            : curr.total == 0
+            ? prev[prev.length - 1]
             : updateRecall(
                 prev[prev.length - 1],
                 curr.successes,
@@ -109,7 +111,7 @@ export default defineComponent({
 
     const predictedRecalls = computed(() =>
       elapseds.value.map((elapsed, i) =>
-        predictRecall(models.value[i], totalElapseds.value[i], true)
+        predictRecall(models.value[i], elapsed.elapsed, true)
       )
     );
 
