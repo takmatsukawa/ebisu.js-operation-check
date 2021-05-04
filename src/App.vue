@@ -48,6 +48,14 @@ model = updateRecall(model, 0, 1 10);
       </tbody>
     </table>
   </main>
+  <footer class="container">
+    <a
+      class="github"
+      href="https://github.com/takmatsukawa/ebisu.js-operation-check"
+    >
+      <img src="/GitHub-Mark-32px.png" alt="GitHub" />
+    </a>
+  </footer>
 </template>
 
 <script lang="ts">
@@ -101,8 +109,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.container {
+main {
   margin-top: 5rem;
-  margin-bottom: 10rem;
+  margin-bottom: 5rem;
+}
+
+footer {
+  height: 10rem;
+}
+
+.github {
+  float: right;
 }
 </style>
