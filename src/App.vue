@@ -53,7 +53,7 @@ model = updateRecall(model, 0, 1 10);
       class="github"
       href="https://github.com/takmatsukawa/ebisu.js-operation-check"
     >
-      <img src="/GitHub-Mark-32px.png" alt="GitHub" />
+      <img src="/GitHub-Mark-32px.png" alt="GitHub" width="32" height="32" />
     </a>
   </footer>
 </template>
