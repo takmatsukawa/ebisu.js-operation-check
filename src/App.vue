@@ -5,16 +5,16 @@
       <a href="https://fasiha.github.io/ebisu.js/">Ebisu.js</a> is a JavaScript
       library to deal with forgetting curve.
     </p>
-    <pre><code>import {defaultModel, predictRecall, updateRecall} from 'ebisu-js';
-// <a href="#log0">t=0</a> Initialize the model
+    <pre><code>import { defaultModel, predictRecall, updateRecall } from 'ebisu-js';
+// <strong><a href="#log0"><u>t=0</u></a></strong> Initialize the model
 let model = defaultModel({{halfLife}});
-// After <a href="#log1">t=1</a>
+// After <strong><a href="#log1"><u>t=1</u></a></strong>
 console.log(predictRecall(model, 1, true));
 // ...
-// After <a href="#log11">t=11</a>, 1 success of 1 trial
+// After <strong><a href="#log11"><u>t=11</u></a></strong>, 1 success of 1 trial
 model = updateRecall(model, 1, 1 11);
 // ...
-// After <a href="#log21">t=10</a> since last `updateRecall`, unsuccess of 1 trial
+// After <strong><a href="#log21"><u>t=10</u></a></strong> since last `updateRecall`, unsuccess of 1 trial
 model = updateRecall(model, 0, 1 10);
 </code></pre>
     <p>
