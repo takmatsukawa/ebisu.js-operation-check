@@ -2,11 +2,11 @@
   "name": "my-vue-app",
   "version": "0.0.0",
   "scripts": {
+    "test": "vue-tsc --noEmit",
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "serve": "vite preview",
-    "format": "prettier --write .",
-    "deploy": "./deploy.sh"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "ebisu-js": "^2.0.0",
