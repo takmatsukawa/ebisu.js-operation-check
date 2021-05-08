@@ -3,7 +3,7 @@
     <h1>How to use Ebisu.js</h1>
     <p>
       <a href="https://fasiha.github.io/ebisu.js/">Ebisu.js</a> is a JavaScript
-      library to deal with forgetting curve.
+      library to help deal with forgetting curves.
     </p>
     <pre><code>import { defaultModel, predictRecall, updateRecall } from 'ebisu-js';
 // <strong><a href="#log0"><u>t=0</u></a></strong> Initialize the model
